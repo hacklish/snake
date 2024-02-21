@@ -19,7 +19,7 @@ namespace Snake
             Random randomnummer = new Random();
             int score = 5;
             int gameover = 0;
-            pixel hoofd = new pixel();
+            Pixel hoofd = new Pixel();
             hoofd.xpos = screenwidth/2;
             hoofd.ypos = screenheight/2;
             hoofd.schermkleur = ConsoleColor.Red;
@@ -143,7 +143,7 @@ namespace Snake
             Console.WriteLine("Game over, Score: "+ score);
             Console.SetCursorPosition(screenwidth / 5, screenheight / 2 +1);
         }
-        class pixel
+        class Pixel
         {
             public int xpos { get; set; }
             public int ypos { get; set; }
