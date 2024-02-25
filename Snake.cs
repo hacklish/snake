@@ -27,8 +27,9 @@ namespace Snake
             string movement = "RIGHT";
             List<int> xposlijf = new List<int>();
             List<int> yposlijf = new List<int>();
-            int berryx = randomnummer.Next(0, screenwidth);
-            int berryy = randomnummer.Next(0, screenheight);
+            var berryPosition = new Pixel();
+            berryPosition.xpos = randomnummer.Next(0, screenwidth);
+            berryPosition.ypos = randomnummer.Next(0, screenheight);
             DateTime tijd = DateTime.Now;
             DateTime tijd2 = DateTime.Now;
             string buttonpressed = "no";
@@ -60,11 +61,11 @@ namespace Snake
                     Console.Write("■");
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
-                if (berryx == headPosition.xpos && berryy == headPosition.ypos)
+                if (berryPosition.xpos == headPosition.xpos && berryPosition.ypos == headPosition.ypos)
                 {
                     score++;
-                    berryx = randomnummer.Next(1, screenwidth-2);
-                    berryy = randomnummer.Next(1, screenheight-2);
+                    berryPosition.xpos = randomnummer.Next(1, screenwidth-2);
+                    berryPosition.ypos = randomnummer.Next(1, screenheight-2);
                 } 
                 for (int i = 0; i < xposlijf.Count(); i++)
                 {
@@ -82,7 +83,7 @@ namespace Snake
                 Console.SetCursorPosition(headPosition.xpos, headPosition.ypos);
                 Console.ForegroundColor = headPosition.schermkleur;
                 Console.Write("■");
-                Console.SetCursorPosition(berryx, berryy);
+                Console.SetCursorPosition(berryPosition.xpos , berryPosition.ypos);
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.Write("■");
                 tijd = DateTime.Now;
