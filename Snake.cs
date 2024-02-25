@@ -28,8 +28,8 @@ namespace Snake
             List<int> xposlijf = new List<int>();
             List<int> yposlijf = new List<int>();
             var berryPosition = new Pixel();
-            berryPosition.xpos = randomnummer.Next(0, screenwidth);
-            berryPosition.ypos = randomnummer.Next(0, screenheight);
+            berryPosition.xpos = randomnummer.Next(1, screenwidth - 2);
+            berryPosition.ypos = randomnummer.Next(1, screenheight - 2);
             DateTime tijd = DateTime.Now;
             DateTime tijd2 = DateTime.Now;
             string buttonpressed = "no";
