@@ -25,8 +25,7 @@ namespace Snake
             headPosition.ypos = startPosition.Y;
             headPosition.schermkleur = ConsoleColor.Red;
             string movement = "RIGHT";
-            List<int> xposlijf = new List<int>();
-            List<int> yposlijf = new List<int>();
+            var tail = new List<Point>();
             var berryPosition = new Pixel();
             berryPosition.xpos = randomnummer.Next(1, screenwidth - 2);
             berryPosition.ypos = randomnummer.Next(1, screenheight - 2);
@@ -67,12 +66,13 @@ namespace Snake
                     score++;
                     berryPosition.xpos = randomnummer.Next(1, screenwidth-2);
                     berryPosition.ypos = randomnummer.Next(1, screenheight-2);
-                } 
-                for (int i = 0; i < xposlijf.Count(); i++)
+                }
+
+                foreach (Point tailPoint in tail)
                 {
-                    Console.SetCursorPosition(xposlijf[i], yposlijf[i]);
+                    Console.SetCursorPosition(tailPoint.X, tailPoint.Y);
                     Console.Write("■");
-                    if (xposlijf[i] == headPosition.xpos && yposlijf[i] == headPosition.ypos)
+                    if (tailPoint.X == headPosition.xpos && tailPoint.Y == headPosition.ypos)
                     {
                         gameover = 1;
                     }
@@ -119,8 +119,7 @@ namespace Snake
                         }
                     }
                 }
-                xposlijf.Add(headPosition.xpos);
-                yposlijf.Add(headPosition.ypos);
+                tail.Add(new Point(headPosition.xpos, headPosition.ypos));
                 switch (movement)
                 {
                     case "UP":
@@ -136,10 +135,9 @@ namespace Snake
                         headPosition.xpos++;
                         break;
                 }
-                if (xposlijf.Count() > score)
+                if (tail.Count() > score)
                 {
-                    xposlijf.RemoveAt(0);
-                    yposlijf.RemoveAt(0);
+                    tail.RemoveAt(0);
                 }
             }
             Console.SetCursorPosition(screenwidth / 5, screenheight / 2);
