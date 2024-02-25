@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 ///█ ■
-////https://www.youtube.com/watch?v=SGZgvMwjq2U
 namespace Snake
 {
     class Program
