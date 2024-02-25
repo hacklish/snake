@@ -30,6 +30,7 @@ namespace Snake
             var berryPosition = new Pixel();
             berryPosition.xpos = randomnummer.Next(1, screenwidth - 2);
             berryPosition.ypos = randomnummer.Next(1, screenheight - 2);
+            berryPosition.schermkleur = ConsoleColor.Cyan;
             DateTime tijd = DateTime.Now;
             DateTime tijd2 = DateTime.Now;
             string buttonpressed = "no";
@@ -84,7 +85,7 @@ namespace Snake
                 Console.ForegroundColor = headPosition.schermkleur;
                 Console.Write("■");
                 Console.SetCursorPosition(berryPosition.xpos , berryPosition.ypos);
-                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.ForegroundColor = berryPosition.schermkleur;
                 Console.Write("■");
                 tijd = DateTime.Now;
                 buttonpressed = "no";
