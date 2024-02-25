@@ -12,10 +12,11 @@ namespace Snake
     {
         static void Main(string[] args)
         {
-            Console.WindowHeight = 16;
-            Console.WindowWidth = 32;
-            int screenwidth = Console.WindowWidth;
-            int screenheight = Console.WindowHeight;
+            int screenwidth = 32;
+            int screenheight = 16;
+            Console.WindowHeight = Math.Max(screenheight, Console.WindowHeight);
+            Console.WindowWidth = Math.Max(screenwidth, Console.WindowWidth);
+
             Random randomnummer = new Random();
             int score = 5;
             int gameover = 0;
