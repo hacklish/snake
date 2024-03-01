@@ -41,23 +41,17 @@ namespace Snake
                 { 
                     gameover = 1;
                 }
-                for (int i = 0;i< screenwidth; i++)
-                {
-                    Console.SetCursorPosition(i, 0);
-                    Console.Write("■");
-                }
-                for (int i = 0; i < screenwidth; i++)
-                {
-                    Console.SetCursorPosition(i, screenheight -1);
-                    Console.Write("■");
-                }
+
+                String wallLine = new String('■', screenwidth);
+                Console.SetCursorPosition(0, 0);
+                Console.Write(wallLine);
+                Console.SetCursorPosition(0, screenheight - 1);
+                Console.Write(wallLine);
+
                 for (int i = 0; i < screenheight; i++)
                 {
                     Console.SetCursorPosition(0, i);
                     Console.Write("■");
-                }
-                for (int i = 0; i < screenheight; i++)
-                {
                     Console.SetCursorPosition(screenwidth - 1, i);
                     Console.Write("■");
                 }
