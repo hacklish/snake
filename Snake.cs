@@ -31,9 +31,6 @@ namespace Snake
             berryPosition.xpos = randomnummer.Next(1, screenwidth - 2);
             berryPosition.ypos = randomnummer.Next(1, screenheight - 2);
             berryPosition.schermkleur = ConsoleColor.Cyan;
-            DateTime tijd = DateTime.Now;
-            DateTime tijd2 = DateTime.Now;
-            string buttonpressed = "no";
             while (true)
             {
                 Console.Clear();
@@ -82,11 +79,11 @@ namespace Snake
                 Console.SetCursorPosition(berryPosition.xpos , berryPosition.ypos);
                 Console.ForegroundColor = berryPosition.schermkleur;
                 Console.Write("■");
-                tijd = DateTime.Now;
-                buttonpressed = "no";
+                DateTime tijd = DateTime.Now;
+                string buttonpressed = "no";
                 while (true)
                 {
-                    tijd2 = DateTime.Now;
+                    DateTime tijd2 = DateTime.Now;
                     if (tijd2.Subtract(tijd).TotalMilliseconds > 500) { break; }
                     if (Console.KeyAvailable)
                     {
