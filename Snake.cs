@@ -18,7 +18,8 @@ namespace Snake
             Console.WindowWidth = Math.Max(screenwidth, Console.WindowWidth);
 
             Random randomnummer = new Random();
-            int score = 5;
+            int snakeLenght = 5;
+            int score = 0;
             int gameover = 0;
             var startPosition = new Point(screenwidth / 2, screenheight / 2);
             var headPosition = new Pixel();
@@ -56,6 +57,7 @@ namespace Snake
                 if (berryPosition.xpos == headPosition.xpos && berryPosition.ypos == headPosition.ypos)
                 {
                     score++;
+                    snakeLenght++;
                     berryPosition.xpos = randomnummer.Next(1, screenwidth-2);
                     berryPosition.ypos = randomnummer.Next(1, screenheight-2);
                 }
@@ -127,7 +129,7 @@ namespace Snake
                         headPosition.xpos++;
                         break;
                 }
-                if (tail.Count() > score)
+                if (tail.Count() > snakeLenght)
                 {
                     tail.RemoveAt(0);
                 }
