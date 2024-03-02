@@ -8,6 +8,14 @@ using System.Drawing;
 ///█ ■
 namespace Snake
 {
+    public enum Direction
+    {
+        NORTH,
+        SOUTH,
+        WEST,
+        EAST,
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -26,7 +34,7 @@ namespace Snake
             headPosition.X = startPosition.X;
             headPosition.Y = startPosition.Y;
             headPosition.Color = ConsoleColor.Red;
-            string movement = "RIGHT";
+            var movement = Direction.EAST;
             var tail = new List<Point>();
             var berryPosition = new Pixel();
             berryPosition.X = randomNummer.Next(1, screenWidth - 2);
@@ -82,7 +90,7 @@ namespace Snake
                 Console.ForegroundColor = berryPosition.Color;
                 Console.Write("■");
                 DateTime tijd = DateTime.Now;
-                string buttonPressed = "no";
+                bool buttonPressed = false;
                 while (true)
                 {
                     DateTime tijd2 = DateTime.Now;
@@ -91,41 +99,41 @@ namespace Snake
                     {
                         var key = Console.ReadKey(true).Key;
                         //Console.WriteLine(toets.Key.ToString());
-                        if (key.Equals(ConsoleKey.UpArrow) && movement != "DOWN" && buttonPressed == "no")
+                        if (key.Equals(ConsoleKey.UpArrow) && movement != Direction.SOUTH && !buttonPressed)
                         {
-                            movement = "UP";
-                            buttonPressed = "yes";
+                            movement = Direction.NORTH;
+                            buttonPressed = true;
                         }
-                        if (key.Equals(ConsoleKey.DownArrow) && movement != "UP" && buttonPressed == "no")
+                        if (key.Equals(ConsoleKey.DownArrow) && movement != Direction.NORTH && !buttonPressed)
                         {
-                            movement = "DOWN";
-                            buttonPressed = "yes";
+                            movement = Direction.SOUTH;
+                            buttonPressed = true;
                         }
-                        if (key.Equals(ConsoleKey.LeftArrow) && movement != "RIGHT" && buttonPressed == "no")
+                        if (key.Equals(ConsoleKey.LeftArrow) && movement != Direction.EAST && !buttonPressed)
                         {
-                            movement = "LEFT";
-                            buttonPressed = "yes";
+                            movement = Direction.WEST;
+                            buttonPressed = true;
                         }
-                        if (key.Equals(ConsoleKey.RightArrow) && movement != "LEFT" && buttonPressed == "no")
+                        if (key.Equals(ConsoleKey.RightArrow) && movement != Direction.WEST && !buttonPressed)
                         {
-                            movement = "RIGHT";
-                            buttonPressed = "yes";
+                            movement = Direction.EAST;
+                            buttonPressed = true;
                         }
                     }
                 }
                 tail.Add(new Point(headPosition.X, headPosition.Y));
                 switch (movement)
                 {
-                    case "UP":
+                    case Direction.NORTH:
                         headPosition.Y--;
                         break;
-                    case "DOWN":
+                    case Direction.SOUTH:
                         headPosition.Y++;
                         break;
-                    case "LEFT":
+                    case Direction.WEST:
                         headPosition.X--;
                         break;
-                    case "RIGHT":
+                    case Direction.EAST:
                         headPosition.X++;
                         break;
                 }
