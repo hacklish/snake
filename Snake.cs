@@ -138,7 +138,7 @@ namespace Snake
             Console.WriteLine("Game over, Score: "+ score);
             Console.SetCursorPosition(screenWidth / 5, screenHeight / 2 +1);
         }
-        class Pixel
+        struct Pixel
         {
             public int X { get; set; }
             public int Y { get; set; }
