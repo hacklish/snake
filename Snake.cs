@@ -40,27 +40,29 @@ namespace Snake
             berryPosition.X = randomNummer.Next(1, screenWidth - 2);
             berryPosition.Y = randomNummer.Next(1, screenHeight - 2);
             berryPosition.Color = ConsoleColor.Cyan;
+
+            Console.Clear();
+            String wallLine = new String('■', screenWidth);
+            Console.SetCursorPosition(0, 0);
+            Console.Write(wallLine);
+            Console.SetCursorPosition(0, screenHeight - 1);
+            Console.Write(wallLine);
+
+            for (int i = 0; i < screenHeight; i++)
+            {
+                Console.SetCursorPosition(0, i);
+                Console.Write("■");
+                Console.SetCursorPosition(screenWidth - 1, i);
+                Console.Write("■");
+            }
+
             while (true)
             {
-                Console.Clear();
                 if (headPosition.X == screenWidth-1 || headPosition.X == 0 ||headPosition.Y == screenHeight-1 || headPosition.Y == 0)
-                { 
+                {
                     gameover = 1;
                 }
 
-                String wallLine = new String('■', screenWidth);
-                Console.SetCursorPosition(0, 0);
-                Console.Write(wallLine);
-                Console.SetCursorPosition(0, screenHeight - 1);
-                Console.Write(wallLine);
-
-                for (int i = 0; i < screenHeight; i++)
-                {
-                    Console.SetCursorPosition(0, i);
-                    Console.Write("■");
-                    Console.SetCursorPosition(screenWidth - 1, i);
-                    Console.Write("■");
-                }
                 Console.ForegroundColor = ConsoleColor.Green;
                 if (berryPosition.X == headPosition.X && berryPosition.Y == headPosition.Y)
                 {
@@ -134,6 +136,8 @@ namespace Snake
                 }
                 if (tail.Count() > snakeLenght)
                 {
+                    Console.SetCursorPosition(tail[0].X, tail[0].Y);
+                    Console.Write(' ');
                     tail.RemoveAt(0);
                 }
             }
