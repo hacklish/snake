@@ -90,7 +90,6 @@ namespace Snake
                 Console.ForegroundColor = berryPosition.Color;
                 Console.Write("■");
                 DateTime tijd = DateTime.Now;
-                bool buttonPressed = false;
                 while (true)
                 {
                     DateTime tijd2 = DateTime.Now;
@@ -99,25 +98,21 @@ namespace Snake
                     {
                         var key = Console.ReadKey(true).Key;
                         //Console.WriteLine(toets.Key.ToString());
-                        if (key.Equals(ConsoleKey.UpArrow) && movement != Direction.SOUTH && !buttonPressed)
+                        if (key.Equals(ConsoleKey.UpArrow) && movement != Direction.SOUTH)
                         {
                             movement = Direction.NORTH;
-                            buttonPressed = true;
                         }
-                        if (key.Equals(ConsoleKey.DownArrow) && movement != Direction.NORTH && !buttonPressed)
+                        if (key.Equals(ConsoleKey.DownArrow) && movement != Direction.NORTH)
                         {
                             movement = Direction.SOUTH;
-                            buttonPressed = true;
                         }
-                        if (key.Equals(ConsoleKey.LeftArrow) && movement != Direction.EAST && !buttonPressed)
+                        if (key.Equals(ConsoleKey.LeftArrow) && movement != Direction.EAST)
                         {
                             movement = Direction.WEST;
-                            buttonPressed = true;
                         }
-                        if (key.Equals(ConsoleKey.RightArrow) && movement != Direction.WEST && !buttonPressed)
+                        if (key.Equals(ConsoleKey.RightArrow) && movement != Direction.WEST)
                         {
                             movement = Direction.EAST;
-                            buttonPressed = true;
                         }
                     }
                 }
