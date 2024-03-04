@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Drawing;
-///█ ■
+
 namespace Snake
 {
     public enum Direction
@@ -14,6 +14,96 @@ namespace Snake
         SOUTH,
         WEST,
         EAST,
+    }
+
+    class Snake
+    {
+        private List<Point> _body = new List<Point>();
+        private const int _startLength = 5;
+        private int _length = _startLength;
+
+        public Snake(Point pt)
+        {
+            _body.Add(pt);
+        }
+
+        public Snake(int startX, int startY)
+        {
+            _body.Add(new Point(startX, startY));
+        }
+
+        public int GetScore()
+        {
+            return _length - _startLength;
+        }
+
+        public Point GetHeadPosition()
+        {
+            return _body[0];
+        }
+
+        public List<Point> GetTail()
+        {
+            return _body.GetRange(1, _body.Count - 1);
+        }
+
+        public void Grow()
+        {
+            ++_length;
+        }
+
+        public void Move(Direction where, int howMuch)
+        {
+            Point diff = DirectionToOffset(where);
+
+            Point head = GetHeadPosition();
+            for (int i = 0; i < howMuch; ++i)
+            {
+                head.Offset(diff);
+                _body.Insert(0, head);
+            }
+
+            ClearExcess();
+        }
+
+        private Point DirectionToOffset(Direction stepDirection)
+        {
+            var diff = new Point(0, 0);
+            switch (stepDirection)
+            {
+                case Direction.NORTH:
+                    diff.Y = -1;
+                    break;
+
+                case Direction.SOUTH:
+                    diff.Y = 1;
+                    break;
+
+                case Direction.EAST:
+                    diff.X = 1;
+                    break;
+
+                case Direction.WEST:
+                    diff.X = -1;
+                    break;
+            }
+
+            return diff;
+        }
+
+        private void ClearExcess()
+        {
+            int excess = _body.Count - _length;
+            for (int i = 0; i < excess; ++i)
+            {
+                // FIXME: console clean-up, should be somwhere else
+                Point bodyElement = _body[_body.Count - 1];
+                Console.SetCursorPosition(bodyElement.X, bodyElement.Y);
+                Console.Write(' ');
+
+                _body.RemoveAt(_body.Count - 1);
+            }
+        }
     }
 
     class Program
@@ -26,16 +116,10 @@ namespace Snake
             Console.WindowWidth = Math.Max(screenWidth, Console.WindowWidth);
 
             Random randomNummer = new Random();
-            int snakeLenght = 5;
-            int score = 0;
             int gameover = 0;
             var startPosition = new Point(screenWidth / 2, screenHeight / 2);
-            var headPosition = new Pixel();
-            headPosition.X = startPosition.X;
-            headPosition.Y = startPosition.Y;
-            headPosition.Color = ConsoleColor.Red;
+            var headColor = ConsoleColor.Red;
             var movement = Direction.EAST;
-            var tail = new List<Point>();
             var berryPosition = new Pixel();
             berryPosition.X = randomNummer.Next(1, screenWidth - 2);
             berryPosition.Y = randomNummer.Next(1, screenHeight - 2);
@@ -56,22 +140,25 @@ namespace Snake
                 Console.Write("■");
             }
 
+            Snake snake = new Snake(startPosition);
+
             while (true)
             {
+                var headPosition = snake.GetHeadPosition();
                 if (headPosition.X == screenWidth-1 || headPosition.X == 0 ||headPosition.Y == screenHeight-1 || headPosition.Y == 0)
                 {
                     gameover = 1;
                 }
 
-                Console.ForegroundColor = ConsoleColor.Green;
                 if (berryPosition.X == headPosition.X && berryPosition.Y == headPosition.Y)
                 {
-                    score++;
-                    snakeLenght++;
+                    snake.Grow();
                     berryPosition.X = randomNummer.Next(1, screenWidth-2);
                     berryPosition.Y = randomNummer.Next(1, screenHeight-2);
                 }
 
+                Console.ForegroundColor = ConsoleColor.Green;
+                List<Point> tail = snake.GetTail();
                 foreach (Point tailPoint in tail)
                 {
                     Console.SetCursorPosition(tailPoint.X, tailPoint.Y);
@@ -86,11 +173,12 @@ namespace Snake
                     break;
                 }
                 Console.SetCursorPosition(headPosition.X, headPosition.Y);
-                Console.ForegroundColor = headPosition.Color;
+                Console.ForegroundColor = headColor;
                 Console.Write("■");
                 Console.SetCursorPosition(berryPosition.X , berryPosition.Y);
                 Console.ForegroundColor = berryPosition.Color;
                 Console.Write("■");
+
                 DateTime tijd = DateTime.Now;
                 while (true)
                 {
@@ -99,7 +187,6 @@ namespace Snake
                     if (Console.KeyAvailable)
                     {
                         var key = Console.ReadKey(true).Key;
-                        //Console.WriteLine(toets.Key.ToString());
                         if (key.Equals(ConsoleKey.UpArrow) && movement != Direction.SOUTH)
                         {
                             movement = Direction.NORTH;
@@ -118,33 +205,15 @@ namespace Snake
                         }
                     }
                 }
-                tail.Add(new Point(headPosition.X, headPosition.Y));
-                switch (movement)
-                {
-                    case Direction.NORTH:
-                        headPosition.Y--;
-                        break;
-                    case Direction.SOUTH:
-                        headPosition.Y++;
-                        break;
-                    case Direction.WEST:
-                        headPosition.X--;
-                        break;
-                    case Direction.EAST:
-                        headPosition.X++;
-                        break;
-                }
-                if (tail.Count() > snakeLenght)
-                {
-                    Console.SetCursorPosition(tail[0].X, tail[0].Y);
-                    Console.Write(' ');
-                    tail.RemoveAt(0);
-                }
+
+                snake.Move(movement, 1);
             }
+
             Console.SetCursorPosition(screenWidth / 5, screenHeight / 2);
-            Console.WriteLine("Game over, Score: "+ score);
+            Console.WriteLine("Game over, Score: " + snake.GetScore());
             Console.SetCursorPosition(screenWidth / 5, screenHeight / 2 +1);
         }
+
         struct Pixel
         {
             public int X { get; set; }
@@ -153,4 +222,3 @@ namespace Snake
         }
     }
 }
-//¦
