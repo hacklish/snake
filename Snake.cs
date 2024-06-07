@@ -16,6 +16,131 @@ namespace Snake
         EAST,
     }
 
+    public enum TailType
+    {
+        EMPTY,
+        HEAD,
+        SNAKE,
+        WALL,
+        FOOD,
+    }
+
+    class GameRender
+    {
+        private ConsoleColor _defaultColor;
+
+        public GameRender()
+        {
+            Console.Clear();
+            _defaultColor = Console.BackgroundColor;
+        }
+
+        public void SetAt(Point at, TailType to)
+        {
+            Console.SetCursorPosition(at.X, at.Y);
+
+            var color = _defaultColor;
+            String body = "■";
+            switch (to)
+            {
+                case TailType.EMPTY:
+                    color = _defaultColor;
+                    body = " ";
+                    break;
+
+                case TailType.FOOD:
+                    color = ConsoleColor.Red;
+                    break;
+
+                case TailType.WALL: /* FALLTHROUGH */
+                case TailType.SNAKE:
+                    color = ConsoleColor.White;
+                    break;
+
+                case TailType.HEAD:
+                    color = ConsoleColor.Green;
+                    break;
+            }
+
+            Console.ForegroundColor = color;
+            Console.Write(body);
+        }
+    }
+
+    class GameBoard
+    {
+        private int _width;
+        private int _height;
+        private TailType[,] _tiles;
+        private Random _random;
+        private GameRender _render;
+
+        public GameBoard(int width, int height)
+        {
+            _tiles = new TailType[width, height];
+            _width = width;
+            _height = height;
+            _random = new Random();
+            _render = new GameRender();
+
+            ClearBoard();
+            GenerateBerry();
+        }
+
+        private void ClearBoard()
+        {
+            for (int i = 0; i < _width; ++i)
+            {
+                for (int j = 0; j < _height; ++j)
+                {
+                    if (i == 0 || j == 0
+                        || i == (_width - 1) || j == (_height - 1))
+                    {
+                        SetAt(new Point(i, j), TailType.WALL);
+                    }
+                    else
+                    {
+                        ClearAt(new Point(i, j));
+                    }
+                }
+            }
+        }
+
+        public void ClearAt(Point clearPosition)
+        {
+            SetAt(clearPosition, TailType.EMPTY);
+        }
+
+        public void SetAt(Point at, TailType to)
+        {
+            _tiles[at.X, at.Y] = to;
+            _render.SetAt(at, to);
+        }
+
+        public bool IsObstacleAt(Point evalPosition)
+        {
+            TailType obstacle = _tiles[evalPosition.X, evalPosition.Y];
+            return (obstacle == TailType.SNAKE) ||
+                   (obstacle == TailType.WALL);
+        }
+
+        public bool IsConsumableAt(Point evalPosition)
+        {
+            TailType tail = _tiles[evalPosition.X, evalPosition.Y];
+            return tail == TailType.FOOD;
+        }
+
+        public Point GenerateBerry()
+        {
+            int x = _random.Next(1, _width - 2);
+            int y = _random.Next(1, _height - 2);
+            var berry = new Point(x, y);
+
+            SetAt(berry, TailType.FOOD);
+            return berry;
+        }
+    }
+
     class Snake
     {
         private List<Point> _body = new List<Point>();
@@ -52,7 +177,7 @@ namespace Snake
             ++_length;
         }
 
-        public void Move(Direction where, int howMuch)
+        public List<Point> Move(Direction where, int howMuch)
         {
             Point diff = DirectionToOffset(where);
 
@@ -63,7 +188,7 @@ namespace Snake
                 _body.Insert(0, head);
             }
 
-            ClearExcess();
+            return ClearExcess();
         }
 
         private Point DirectionToOffset(Direction stepDirection)
@@ -91,18 +216,20 @@ namespace Snake
             return diff;
         }
 
-        private void ClearExcess()
+        private List<Point> ClearExcess()
         {
+            List<Point> removed = new List<Point>();
+
             int excess = _body.Count - _length;
             for (int i = 0; i < excess; ++i)
             {
-                // FIXME: console clean-up, should be somwhere else
-                Point bodyElement = _body[_body.Count - 1];
-                Console.SetCursorPosition(bodyElement.X, bodyElement.Y);
-                Console.Write(' ');
-
-                _body.RemoveAt(_body.Count - 1);
+                int index = _body.Count - 1;
+                Point bodyElement = _body[index];
+                removed.Add(bodyElement);
+                _body.RemoveAt(index);
             }
+
+            return removed;
         }
     }
 
@@ -110,80 +237,44 @@ namespace Snake
     {
         static void Main(string[] args)
         {
+            var movement = Direction.EAST;
+
             int screenWidth = 32;
             int screenHeight = 16;
             Console.WindowHeight = Math.Max(screenHeight, Console.WindowHeight);
             Console.WindowWidth = Math.Max(screenWidth, Console.WindowWidth);
 
-            Random randomNummer = new Random();
-            int gameover = 0;
-            var startPosition = new Point(screenWidth / 2, screenHeight / 2);
-            var headColor = ConsoleColor.Red;
-            var movement = Direction.EAST;
-            var berryPosition = new Pixel();
-            berryPosition.X = randomNummer.Next(1, screenWidth - 2);
-            berryPosition.Y = randomNummer.Next(1, screenHeight - 2);
-            berryPosition.Color = ConsoleColor.Cyan;
-
-            Console.Clear();
-            String wallLine = new String('■', screenWidth);
-            Console.SetCursorPosition(0, 0);
-            Console.Write(wallLine);
-            Console.SetCursorPosition(0, screenHeight - 1);
-            Console.Write(wallLine);
-
-            for (int i = 0; i < screenHeight; i++)
-            {
-                Console.SetCursorPosition(0, i);
-                Console.Write("■");
-                Console.SetCursorPosition(screenWidth - 1, i);
-                Console.Write("■");
-            }
-
-            Snake snake = new Snake(startPosition);
+            var board = new GameBoard(screenWidth, screenHeight);
+            Snake snake = new Snake(screenWidth / 2, screenHeight / 2);
 
             while (true)
             {
                 var headPosition = snake.GetHeadPosition();
-                if (headPosition.X == screenWidth-1 || headPosition.X == 0 ||headPosition.Y == screenHeight-1 || headPosition.Y == 0)
+                if (board.IsObstacleAt(headPosition))
                 {
-                    gameover = 1;
+                    // GameOver
+                    break;
                 }
 
-                if (berryPosition.X == headPosition.X && berryPosition.Y == headPosition.Y)
+                if (board.IsConsumableAt(headPosition))
                 {
+                    board.GenerateBerry();
                     snake.Grow();
-                    berryPosition.X = randomNummer.Next(1, screenWidth-2);
-                    berryPosition.Y = randomNummer.Next(1, screenHeight-2);
                 }
 
-                Console.ForegroundColor = ConsoleColor.Green;
+                board.SetAt(headPosition, TailType.HEAD);
                 List<Point> tail = snake.GetTail();
                 foreach (Point tailPoint in tail)
                 {
-                    Console.SetCursorPosition(tailPoint.X, tailPoint.Y);
-                    Console.Write("■");
-                    if (tailPoint.X == headPosition.X && tailPoint.Y == headPosition.Y)
-                    {
-                        gameover = 1;
-                    }
+                    board.SetAt(tailPoint, TailType.SNAKE);
                 }
-                if (gameover == 1)
-                {
-                    break;
-                }
-                Console.SetCursorPosition(headPosition.X, headPosition.Y);
-                Console.ForegroundColor = headColor;
-                Console.Write("■");
-                Console.SetCursorPosition(berryPosition.X , berryPosition.Y);
-                Console.ForegroundColor = berryPosition.Color;
-                Console.Write("■");
 
-                DateTime tijd = DateTime.Now;
+                DateTime loopStart = DateTime.Now;
                 while (true)
                 {
-                    DateTime tijd2 = DateTime.Now;
-                    if (tijd2.Subtract(tijd).TotalMilliseconds > 500) { break; }
+                    DateTime currentTime = DateTime.Now;
+                    if (currentTime.Subtract(loopStart).TotalMilliseconds > 500) { break; }
+
                     if (Console.KeyAvailable)
                     {
                         var key = Console.ReadKey(true).Key;
@@ -206,19 +297,16 @@ namespace Snake
                     }
                 }
 
-                snake.Move(movement, 1);
+                var toClean = snake.Move(movement, 1);
+                foreach (Point clearedPoint in toClean)
+                {
+                    board.ClearAt(clearedPoint);
+                }
             }
 
             Console.SetCursorPosition(screenWidth / 5, screenHeight / 2);
             Console.WriteLine("Game over, Score: " + snake.GetScore());
             Console.SetCursorPosition(screenWidth / 5, screenHeight / 2 +1);
-        }
-
-        struct Pixel
-        {
-            public int X { get; set; }
-            public int Y { get; set; }
-            public ConsoleColor Color { get; set; }
         }
     }
 }
