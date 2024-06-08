@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://d16htrlqf4g2w"]
+[gd_scene load_steps=16 format=3 uid="uid://d16htrlqf4g2w"]
 
 [ext_resource type="Texture2D" uid="uid://cknn1k8my6m6r" path="res://assets/snake.png" id="1_l1uju"]
 [ext_resource type="Script" path="res://game_world.cs" id="1_reh5r"]
 [ext_resource type="Texture2D" uid="uid://d02v7qv882syg" path="res://assets/food.png" id="3_bihm4"]
 [ext_resource type="Texture2D" uid="uid://bmqk1g7h1lcff" path="res://assets/background.png" id="4_qpa73"]
+[ext_resource type="Script" path="res://RetryButton.gd" id="5_xdfmq"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_twnrr"]
 texture = ExtResource("1_l1uju")
@@ -54,6 +55,18 @@ sources/3 = SubResource("TileSetAtlasSource_kojuo")
 font = SubResource("SystemFont_14tr8")
 font_size = 30
 
+[sub_resource type="SystemFont" id="SystemFont_1du6d"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_irkvc"]
+font = SubResource("SystemFont_1du6d")
+font_size = 60
+
+[sub_resource type="SystemFont" id="SystemFont_eagqh"]
+
+[sub_resource type="Theme" id="Theme_rhkkb"]
+default_font = SubResource("SystemFont_eagqh")
+default_font_size = 25
+
 [node name="GameWorld" type="Node2D"]
 script = ExtResource("1_reh5r")
 
@@ -74,3 +87,55 @@ offset_bottom = 67.0
 text = "Test"
 label_settings = SubResource("LabelSettings_qvsdi")
 vertical_alignment = 1
+
+[node name="GameOverScreen" type="ColorRect" parent="."]
+unique_name_in_owner = true
+process_mode = 2
+top_level = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.619608)
+
+[node name="GOLabel" type="Label" parent="GameOverScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Game Over"
+label_settings = SubResource("LabelSettings_irkvc")
+
+[node name="RetryButton" type="Button" parent="GameOverScreen"]
+custom_minimum_size = Vector2(2.08165e-12, 60)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 1
+mouse_default_cursor_shape = 2
+theme = SubResource("Theme_rhkkb")
+action_mode = 0
+button_mask = 7
+text = "Try Again"
+script = ExtResource("5_xdfmq")
+
+[node name="GameStep" type="Timer" parent="."]
+wait_time = 0.2
+autostart = true
+
+[connection signal="pressed" from="GameOverScreen/RetryButton" to="GameOverScreen/RetryButton" method="_on_pressed"]

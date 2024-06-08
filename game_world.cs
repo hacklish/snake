@@ -6,39 +6,51 @@ using Snake;
 using System.Drawing; // Point
 using System.Collections.Generic; // List
 
+
 public partial class game_world : Node2D
 {
 	private TileMap godot_board;
 	private Label godot_score;
+	private ColorRect godot_endgame;
 	private Vector2I screen_size = new Vector2I(22, 16);
 
 	private Snake.Direction movement = Direction.EAST;
 	private Snake.GameBoard board;
 	private Snake.Snake snake;
 
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		base._Ready();
 
+		godot_endgame = GetNode<ColorRect>("%GameOverScreen");
+		godot_endgame.Hide();
+		GetTree().Paused = false;
+
+		godot_board = GetNode<TileMap>("%GameTiles");
 		godot_score = GetNode<Label>("%ScoreLabel");
 		godot_score.Text = "Score: 0";
-		
-		godot_board = GetNode<TileMap>("%GameTiles");
 
 		var render = new Snake.GameRender(godot_board);
 		board = new Snake.GameBoard(screen_size.X, screen_size.Y, render);
 		snake = new Snake.Snake(screen_size.X / 2, screen_size.Y / 2);
 	}
 
+	private void _GameOverDo()
+	{
+		GetTree().Paused = true;
+		godot_endgame.Show();
+	}
+
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		godot_score.Text = "Score: " + snake.GetScore();
+
 		var headPosition = snake.GetHeadPosition();
 		if (board.IsObstacleAt(headPosition))
-		{
-			// GameOver
-		}
+			_GameOverDo();
 
 		if (board.IsConsumableAt(headPosition))
 		{
@@ -53,7 +65,6 @@ public partial class game_world : Node2D
 			board.SetAt(tailPoint, TailType.SNAKE);
 		}
 
-		/*
 		if (Input.IsActionPressed("MOVE_UP") && movement != Direction.SOUTH)
 			movement = Direction.NORTH;
 		if (Input.IsActionPressed("MOVE_DOWN") && movement != Direction.NORTH)
@@ -68,7 +79,5 @@ public partial class game_world : Node2D
 		{
 			board.ClearAt(clearedPoint);
 		}
-		*/
-		godot_score.Text = "Score: " + snake.GetScore();
 	}
 }
