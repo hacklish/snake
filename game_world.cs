@@ -13,6 +13,7 @@ public partial class game_world : Node2D
 	private Label godot_score;
 	private ColorRect godot_endgame;
 	private Vector2I screen_size = new Vector2I(22, 16);
+	private double total_delta = 0.0;
 
 	private Snake.Direction movement = Direction.EAST;
 	private Snake.GameBoard board;
@@ -51,6 +52,11 @@ public partial class game_world : Node2D
 		var headPosition = snake.GetHeadPosition();
 		if (board.IsObstacleAt(headPosition))
 			_GameOverDo();
+
+		total_delta += delta;
+		if (total_delta < (1/6.0))
+			return;
+		total_delta = 0.0;
 
 		if (board.IsConsumableAt(headPosition))
 		{
