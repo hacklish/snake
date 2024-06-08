@@ -52,7 +52,8 @@ public partial class game_world : Node2D
 		{
 			board.SetAt(tailPoint, TailType.SNAKE);
 		}
-		
+
+		/*
 		if (Input.IsActionPressed("MOVE_UP") && movement != Direction.SOUTH)
 			movement = Direction.NORTH;
 		if (Input.IsActionPressed("MOVE_DOWN") && movement != Direction.NORTH)
@@ -67,7 +68,7 @@ public partial class game_world : Node2D
 		{
 			board.ClearAt(clearedPoint);
 		}
-		
+		*/
 		godot_score.Text = "Score: " + snake.GetScore();
 	}
 }

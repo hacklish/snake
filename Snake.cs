@@ -46,21 +46,23 @@ namespace Snake
 					break;
 
 				case TailType.FOOD:
-					set = 1;
-					break;
-
-				case TailType.WALL:
 					set = 2;
 					break;
 
+				case TailType.WALL:
+					set = 3;
+					break;
+
 				case TailType.SNAKE:
-					tile.X = 1;
-					tile.Y = 1;
+					set = 1;
+					tile.X = 7;
+					tile.Y = 0;
 					break;
 
 				case TailType.HEAD:
+					set = 1;
 					tile.X = 2;
-					tile.Y = 2;
+					tile.Y = 0;
 					break;
 			}
 
@@ -231,14 +233,6 @@ namespace Snake
 			}
 
 			return removed;
-		}
-	}
-
-	class Program
-	{
-		static void Main(string[] args)
-		{
-
 		}
 	}
 }
