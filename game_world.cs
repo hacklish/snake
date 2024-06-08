@@ -10,8 +10,7 @@ public partial class game_world : Node2D
 {
 	private TileMap godot_board;
 	private Label godot_score;
-	private Vector2I tile_size;
-	private Vector2I screen_size = new Vector2I(16, 32);
+	private Vector2I screen_size = new Vector2I(22, 16);
 
 	private Snake.Direction movement = Direction.EAST;
 	private Snake.GameBoard board;
@@ -26,10 +25,6 @@ public partial class game_world : Node2D
 		godot_score.Text = "Score: 0";
 		
 		godot_board = GetNode<TileMap>("%GameTiles");
-
-		tile_size = godot_board.TileSet.TileSize;
-		Print("TileSize: " + tile_size);
-		Print("ScreenSize: " + screen_size);
 
 		var render = new Snake.GameRender(godot_board);
 		board = new Snake.GameBoard(screen_size.X, screen_size.Y, render);

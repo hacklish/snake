@@ -36,7 +36,9 @@ namespace Snake
 
 		public void SetAt(Point at, TailType to)
 		{
-			//Console.SetCursorPosition(at.X, at.Y);
+			var position = new Vector2I(at.X, at.Y);
+			var tile = new Vector2I();
+			int set = 0;
 
 			switch (to)
 			{
@@ -44,18 +46,25 @@ namespace Snake
 					break;
 
 				case TailType.FOOD:
+					set = 1;
 					break;
 
-				case TailType.WALL: /* FALLTHROUGH */
+				case TailType.WALL:
+					set = 2;
+					break;
+
 				case TailType.SNAKE:
+					tile.X = 1;
+					tile.Y = 1;
 					break;
 
 				case TailType.HEAD:
+					tile.X = 2;
+					tile.Y = 2;
 					break;
 			}
 
-			//Console.ForegroundColor = color;
-			//Console.Write(body);
+			_board.SetCell(0, position, set, tile, 0);
 		}
 	}
 
