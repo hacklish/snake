@@ -64,7 +64,7 @@ public partial class game_world : Node2D
 			snake.Grow();
 		}
 
-		board.SetAt(headPosition, TailType.HEAD);
+		board.SetAt(headPosition, TailType.HEAD, toWhere:movement);
 		List<Point> tail = snake.GetTail();
 		foreach (Point tailPoint in tail)
 		{

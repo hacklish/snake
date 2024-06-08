@@ -9,6 +9,7 @@ namespace Snake
 {
 	public enum Direction
 	{
+		UNKNOWN,
 		NORTH,
 		SOUTH,
 		WEST,
@@ -34,7 +35,7 @@ namespace Snake
 			_board.Clear();
 		}
 
-		public void SetAt(Point at, TailType to)
+		public void SetAt(Point at, TailType to, Direction toWhere)
 		{
 			var position = new Vector2I(at.X, at.Y);
 			var tile = new Vector2I();
@@ -61,8 +62,26 @@ namespace Snake
 
 				case TailType.HEAD:
 					set = 1;
-					tile.X = 2;
-					tile.Y = 0;
+					if (Direction.NORTH == toWhere)
+					{
+						tile.X = 2;
+						tile.Y = 1;
+					}
+					if (Direction.SOUTH == toWhere)
+					{
+						tile.X = 3;
+						tile.Y = 0;
+					}
+					if (Direction.EAST == toWhere)
+					{
+						tile.X = 2;
+						tile.Y = 0;
+					}
+					if (Direction.WEST == toWhere)
+					{
+						tile.X = 3;
+						tile.Y = 1;
+					}
 					break;
 			}
 
@@ -113,11 +132,16 @@ namespace Snake
 		{
 			SetAt(clearPosition, TailType.EMPTY);
 		}
-
+		
 		public void SetAt(Point at, TailType to)
 		{
+			SetAt(at, to, Direction.UNKNOWN);
+		}
+
+		public void SetAt(Point at, TailType to, Direction toWhere)
+		{
 			_tiles[at.X, at.Y] = to;
-			_render.SetAt(at, to);
+			_render.SetAt(at, to, toWhere);
 		}
 
 		public bool IsObstacleAt(Point evalPosition)
