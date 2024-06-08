@@ -159,9 +159,15 @@ namespace Snake
 
 		public Point GenerateBerry()
 		{
-			int x = _random.Next(1, _width - 2);
-			int y = _random.Next(1, _height - 2);
-			var berry = new Point(x, y);
+			bool valid = false;
+			Point berry = new Point();
+
+			while (valid == false)
+			{
+				berry.X = _random.Next(1, _width - 2);
+				berry.Y = _random.Next(1, _height - 2);
+				valid = ! IsObstacleAt(berry);
+			}
 
 			SetAt(berry, TailType.FOOD);
 			return berry;
