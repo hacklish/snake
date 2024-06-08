@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 
+using Godot;
+
 namespace Snake
 {
 	public enum Direction
@@ -24,9 +26,12 @@ namespace Snake
 
 	class GameRender
 	{
-		public GameRender()
+		private TileMap _board;
+
+		public GameRender(TileMap board)
 		{
-			//Console.Clear();
+			_board = board;
+			_board.Clear();
 		}
 
 		public void SetAt(Point at, TailType to)
@@ -62,13 +67,13 @@ namespace Snake
 		private Random _random;
 		private GameRender _render;
 
-		public GameBoard(int width, int height)
+		public GameBoard(int width, int height, GameRender render)
 		{
 			_tiles = new TailType[width, height];
 			_width = width;
 			_height = height;
 			_random = new Random();
-			_render = new GameRender();
+			_render = render;
 
 			ClearBoard();
 			GenerateBerry();
