@@ -1,0 +1,76 @@
+[gd_scene load_steps=11 format=3 uid="uid://d16htrlqf4g2w"]
+
+[ext_resource type="Texture2D" uid="uid://cknn1k8my6m6r" path="res://assets/snake.png" id="1_l1uju"]
+[ext_resource type="Script" path="res://game_world.cs" id="1_reh5r"]
+[ext_resource type="Texture2D" uid="uid://d02v7qv882syg" path="res://assets/food.png" id="3_bihm4"]
+[ext_resource type="Texture2D" uid="uid://bmqk1g7h1lcff" path="res://assets/background.png" id="4_qpa73"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_twnrr"]
+texture = ExtResource("1_l1uju")
+texture_region_size = Vector2i(40, 40)
+9:2/0 = 0
+10:2/0 = 0
+7:2/0 = 0
+7:1/0 = 0
+6:1/0 = 0
+6:0/0 = 0
+3:0/0 = 0
+2:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+3:2/0 = 0
+0:0/0 = 0
+1:0/0 = 0
+7:0/0 = 0
+5:1/0 = 0
+4:1/0 = 0
+3:1/0 = 0
+2:1/0 = 0
+1:1/0 = 0
+0:1/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0flhp"]
+texture = ExtResource("3_bihm4")
+texture_region_size = Vector2i(40, 40)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kojuo"]
+texture = ExtResource("4_qpa73")
+texture_region_size = Vector2i(40, 40)
+0:0/0 = 0
+1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_2d8l7"]
+tile_size = Vector2i(40, 40)
+sources/1 = SubResource("TileSetAtlasSource_twnrr")
+sources/2 = SubResource("TileSetAtlasSource_0flhp")
+sources/3 = SubResource("TileSetAtlasSource_kojuo")
+
+[sub_resource type="SystemFont" id="SystemFont_14tr8"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_qvsdi"]
+font = SubResource("SystemFont_14tr8")
+font_size = 30
+
+[node name="GameWorld" type="Node2D"]
+script = ExtResource("1_reh5r")
+
+[node name="GameTiles" type="TileMap" parent="."]
+unique_name_in_owner = true
+tile_set = SubResource("TileSet_2d8l7")
+rendering_quadrant_size = 40
+format = 2
+layer_0/tile_data = PackedInt32Array(0, 131073, 0)
+
+[node name="ScoreLabel" type="Label" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 50)
+offset_left = 938.0
+offset_top = 17.0
+offset_right = 1138.0
+offset_bottom = 67.0
+text = "Test"
+label_settings = SubResource("LabelSettings_qvsdi")
+vertical_alignment = 1
